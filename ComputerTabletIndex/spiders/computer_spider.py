@@ -14,12 +14,12 @@ class ComputersSpider(scrapy.Spider):
             yield response.follow(href, self.parse_computers)
 
         # follow pagination links
-        for href in response.css('div.col-6 a.pag-number::attr(href)'):
-            yield response.follow(href, self.parse)
+        href = response.css('a.pag-next::attr(href)')[0]
+        yield response.follow(href, self.parse)
 
     def parse_computers(self, response):
         def extract_with_css(query):
-            return response.css(query).extract_first().strip()
+            return response.css(query).extract_first()
 
         # define properties()
         attribute_type = response.css('div.item-properties dt::text').extract()
